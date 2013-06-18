@@ -35,6 +35,7 @@ namespace CubePower.Monitoring
     public class Response
     {
         #region Properties
+        public string asertion = "0";
 
         /* ----------------------------------------------------------------- */
         ///

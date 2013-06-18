@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<VisualState xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ShowCheckBoxes="false">
+  <TopNode>[0-1009]C:\cygwin\home\ichikawa\CubePowerLib\CubePowerTests\CubePowerTests.dll</TopNode>
+  <SelectedNode>[0-1003]CubePowerTests.Monitoring.KyushuClientTester</SelectedNode>
+  <ExcludeCategories>false</ExcludeCategories>
+  <Nodes>
+    <Node UniqueName="[0-1009]C:\cygwin\home\ichikawa\CubePowerLib\CubePowerTests\CubePowerTests.dll" Expanded="true" />
+    <Node UniqueName="[0-1010]CubePowerTests" Expanded="true" />
+    <Node UniqueName="[0-1011]CubePowerTests.Monitoring" Expanded="true" />
+    <Node UniqueName="[0-1006]CubePowerTests.Monitoring.KansaiClientTester" Expanded="true" />
+    <Node UniqueName="[0-1003]CubePowerTests.Monitoring.KyushuClientTester" Expanded="true" />
+    <Node UniqueName="[0-1000]CubePowerTests.Monitoring.TokyoClientTester" Expanded="true" />
+  </Nodes>
+</VisualState>
