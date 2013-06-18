@@ -105,11 +105,18 @@ namespace CubePowerTests.Monitoring
                 var client = new CubePower.Monitoring.KyushuClient();
                 Assert.AreEqual(CubePower.Monitoring.Area.Kyushu, client.Area);
 
-                var response = client.GetResponse(DateTime.Today);
-                Assert.NotNull(response);
+                //try
+                //{
+                    var response = client.GetResponse(DateTime.Today);
+                    Assert.NotNull(response);
 
-                response = client.GetResponse(DateTime.Today.AddDays(-1));
-                Assert.NotNull(response);
+                    response = client.GetResponse(DateTime.Today.AddDays(-1));
+                    Assert.NotNull(response);
+                //}
+                //catch (System.Net.WebException e)
+                //{
+                    //Assert.Fail(e.Status.ToString());
+                //}
             }
             catch (Exception err) { Assert.Fail(err.ToString()); }
         }
