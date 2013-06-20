@@ -151,7 +151,7 @@ namespace CubePower.Monitoring
             try
             {
                 var fields = reader.ReadLine().Split(',');
-                dest.Capacity = int.Parse(fields[0]);
+                dest.Capacity = (int)double.Parse(fields[0]);
                 return true;
             }
             catch (Exception err)
@@ -180,18 +180,16 @@ namespace CubePower.Monitoring
             for (var line = reader.ReadLine(); !string.IsNullOrEmpty(line); line = reader.ReadLine())
             {
                 var fields = line.Split(','); // DATE,TIME,USAGE
-                if (fields.Length != 3) continue;
+                if (fields.Length < 3) continue;
                 try
                 {
                     var time = DateTime.ParseExact(fields[0] + ',' + fields[1],
                         "yyyy'/'M'/'d','H':'mm",
                         System.Globalization.DateTimeFormatInfo.InvariantInfo);
-                    if (time <= target)
-                    {
-                        dest.Time = time;
-                        dest.Usage = int.Parse(fields[2]);
-                        found = true;
-                    }
+                    if (time > target) break;
+                    dest.Time = time;
+                    dest.Usage = (int)double.Parse(fields[2]);
+                    found = true;
                 }
                 catch (FormatException /* err */) { /* フォーマットの不一致は無視 */ }
                 catch (Exception err)
@@ -202,6 +200,55 @@ namespace CubePower.Monitoring
             }
 
             return found;
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// GetCapacity
+        /// 
+        /// <summary>
+        /// ストリームから要求された時刻の消費電力量を取得します。
+        /// Response.Time プロパティは、消費電力量を取得できた時刻で上書き
+        /// されます。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        protected virtual bool CsvUnityCase(System.IO.StreamReader reader, Response dest)
+        {
+            var target = dest.Time;
+            var found = false;
+            var range_begin = new DateTime(target.Year, target.Month, target.Day);
+            var range_end = range_begin.AddDays(1);
+
+            for (var line = reader.ReadLine(); !string.IsNullOrEmpty(line); line = reader.ReadLine())
+            {
+                var fields = line.Split(','); // DATE,TIME,USAGE
+                if (fields.Length != 3) continue;
+                try
+                {
+                    var time = DateTime.ParseExact(fields[0] + ',' + fields[1],
+                        "yyyy'/'M'/'d','H':'mm",
+                        System.Globalization.DateTimeFormatInfo.InvariantInfo);
+                    if (range_begin <= target && target < range_end)
+                    {
+                        int elect = (int)double.Parse(fields[2]);
+                        if (dest.Capacity < elect) dest.Capacity = elect;
+                        if (time <= target)
+                        {
+                            dest.Time = time;
+                            dest.Usage = elect;
+                            found = true;
+                        }
+                    }
+                }
+                catch (FormatException /* err */) { /* フォーマットの不一致は無視 */ }
+                catch (Exception err)
+                {
+                    Trace.TraceError(err.ToString());
+                    return false;
+                }
+            }
+            return found;            
         }
 
         #endregion

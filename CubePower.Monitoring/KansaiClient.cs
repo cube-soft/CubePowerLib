@@ -53,6 +53,8 @@ namespace CubePower.Monitoring
 
         #region Override methods
 
+        private bool today = true;
+
         /* ----------------------------------------------------------------- */
         ///
         /// GetUrl
@@ -64,7 +66,18 @@ namespace CubePower.Monitoring
         /* ----------------------------------------------------------------- */
         protected override string GetUrl(DateTime time)
         {
-            return "http://www.kepco.co.jp/yamasou/juyo1_kansai.csv";
+            if (time == DateTime.Today) return "http://www.kepco.co.jp/yamasou/juyo1_kansai.csv";
+
+            today = false;
+            // 当日以外のデータの収集方法が未定。関電はZIP形式でcsvを保管しているため。
+            //if (time >= new DateTime(2013, 3, 30)) return String.Format("http://www.tepco.co.jp/forecast/html/images/juyo-{0}.csv", time.Year);
+            //else if (time >= new DateTime(2012, 12, 1)) return String.Format("http://www.tepco.co.jp/forecast/html/images/juyo-{0}.csv", time.Year);
+            //else if (time >= new DateTime(2012, 9,  8)) return String.Format("http://www.tepco.co.jp/forecast/html/images/juyo-{0}.csv", time.Year);
+            //else if (time >= new DateTime(2012, 6, 30)) return String.Format("http://www.tepco.co.jp/forecast/html/images/juyo-{0}.csv", time.Year);
+            //else if (time >= new DateTime(2012, 3, 31)) return String.Format("http://www.tepco.co.jp/forecast/html/images/juyo-{0}.csv", time.Year);
+            //else if (time >= new DateTime(2011, 12, 1)) return String.Format("http://www.tepco.co.jp/forecast/html/images/juyo-{0}.csv", time.Year);
+            //else if (new DateTime(2011, 9, 21) <= time && time >= new DateTime(2011, 6, 30)) return String.Format("http://www.tepco.co.jp/forecast/html/images/juyo-{0}.csv", time.Year);
+            return null;
         }
 
         /* ----------------------------------------------------------------- */
@@ -79,56 +92,25 @@ namespace CubePower.Monitoring
         /* ----------------------------------------------------------------- */
         protected override Response GetResponse(System.IO.Stream stream, DateTime time)
         {
-            if (stream == null)
-            {
-                throw new NullReferenceException();
-            }
+            if (stream == null) throw new NullReferenceException();
 
             using (var sr = new StreamReader(stream))
             {
                 var response = new Response();
-
-                // 電力会社の地域
                 response.Area = this.Area;
-
-                // Usage, および Capacity で取得できる値の単位を表す文字列
                 response.Unit = "万kW";
-
-                // 該当日の電力最大供給量(3行目)
-                sr.ReadLine(); sr.ReadLine();
-                string[] fields = sr.ReadLine().Split(',');
-                response.Capacity = int.Parse(fields[0]);
-
-                // 現在の電力消費量、取得した情報の取得時刻(50行目以降)
-                for (int i = 0; i < 46; i++) { sr.ReadLine(); } // 49行目までスキップ
                 response.Time = time;
                 response.Usage = 0;
-                var re = new System.Text.RegularExpressions.Regex(@"^[\d]{4}");
-                string t = time.ToString("yyyy'/'M'/'d");
-                bool flg = false;
-                for (string line = sr.ReadLine(); line != null; line = sr.ReadLine())
-                {
-                    if (re.IsMatch(line))
-                    {
-                        fields = line.Split(',');
-                        try
-                        {
-                            DateTime d =
-                                DateTime.ParseExact(fields[0] + ',' + fields[1],
-                                "yyyy'/'M'/'d','H':'mm",
-                                System.Globalization.DateTimeFormatInfo.InvariantInfo);
-                            if (time >= d) // 指定の日時に最も近い、指定の日時より早い日時
-                            {
-                                response.Time = d;
-                                if (fields.Length > 2) response.Usage = int.Parse(fields[2]);
-                                flg = true;
-                            }
-                        }
-                        catch (FormatException) { }  // フォーマットの不一致は無視
-                    }
-                }
 
-                return flg ? response : null;
+                // 該当日の電力最大供給量(3行目)
+                for (int line = 1; line <= 2; ++line) sr.ReadLine();
+                if (!GetCapacity(sr, response)) return null;
+
+                // 現在の電力消費量、取得した情報の取得時刻(50行目以降)
+                for (int i = 4; i <= 49; i++) sr.ReadLine();
+                if (!GetUsage(sr, response)) return null;
+                
+                return response;
             }
         }
 

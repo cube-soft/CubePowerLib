@@ -53,6 +53,8 @@ namespace CubePower.Monitoring
 
         #region Override methods
 
+        private bool today = true;
+
         /* ----------------------------------------------------------------- */
         ///
         /// GetUrl
@@ -64,18 +66,13 @@ namespace CubePower.Monitoring
         /* ----------------------------------------------------------------- */
         protected override string GetUrl(DateTime time)
         {
-            string base_uri = null;
-            if (time == DateTime.Today)
-            {
-                base_uri = "http://www.kyuden.co.jp/power_usages/csv/electric_power_usage{0}.csv";
-            }
-            else
-            {
-                base_uri = "http://www.kyuden.co.jp/power_usages/csv/juyo-hourly-{0}.csv";
-            }
-            
-            return string.Format(base_uri, time.ToString("yyyymmdd"));
-        }
+            if (time == DateTime.Today) return String.Format("http://www.kyuden.co.jp/power_usages/csv/electric_power_usage{0}.csv", time.ToString("yyyymmdd"));
+                
+            today = false;
+            if (time >= new DateTime(2012, 6, 29)) return String.Format("http://www.kyuden.co.jp/power_usages/csv/juyo-hourly-{0}.csv", time.ToString("yyyymmdd"));
+
+            return null;
+       }
 
         /* ----------------------------------------------------------------- */
         ///
@@ -89,58 +86,35 @@ namespace CubePower.Monitoring
         /* ----------------------------------------------------------------- */
         protected override Response GetResponse(System.IO.Stream stream, DateTime time)
         {
-            // TODO: implementation
-            // throw new NotImplementedException();
-            if (stream == null)
-            {
-                throw new NullReferenceException();
-            }
+            if (stream == null) throw new NullReferenceException();
 
             using (var sr = new StreamReader(stream))
             {
                 var response = new Response();
-
-                // 電力会社の地域
                 response.Area = this.Area;
-
-                // Usage, および Capacity で取得できる値の単位を表す文字列
                 response.Unit = "万kW";
-
-                // 該当日の電力最大供給量(3行目)
-                sr.ReadLine(); sr.ReadLine();
-                string[] fields = sr.ReadLine().Split(',');
-                response.Capacity = int.Parse(fields[0]);
-
-                // 現在の電力消費量、取得した情報の取得時刻(9行目以降)
-                for (int i = 0; i < 5; i++) { sr.ReadLine(); } // 8行目までスキップ
                 response.Time = time;
                 response.Usage = 0;
-                var re = new System.Text.RegularExpressions.Regex(@"^[\d]{4}");
-                string t = time.ToString("yyyy'/'M'/'d");
-                bool flg = false;
-                for (string line = sr.ReadLine(); line != null; line = sr.ReadLine())
-                {
-                    if (re.IsMatch(line))
-                    {
-                        fields = line.Split(',');
-                        try
-                        {
-                            DateTime d =
-                                DateTime.ParseExact(fields[0] + ',' + fields[1],
-                                "yyyy'/'M'/'d','H':'mm",
-                                System.Globalization.DateTimeFormatInfo.InvariantInfo);
-                            if (time >= d) // 指定の日時に最も近い、指定の日時より早い日時
-                            {
-                                response.Time = d;
-                                if (int.Parse(fields[2]) > 0) response.Usage = int.Parse(fields[2]);
-                                flg = true;
-                            }
-                        }
-                        catch (FormatException) { }  // フォーマットの不一致は無視
-                    }
-                }
 
-                return flg ? response : null;
+                // 該当日の電力最大供給量(3行目)
+                for (int line = 1; line <= 2; ++line) sr.ReadLine();
+                if (!GetCapacity(sr, response)) return null;
+
+                // 現在の電力消費量、取得した情報の取得時刻
+                if (today)
+                {
+                    // (9行目以降)
+                    for (int i = 4; i <= 8; i++) sr.ReadLine();
+                    if (!GetUsage(sr, response)) return null;
+                    return response;
+                }
+                else
+                {
+                    // (45行目以降)
+                    for (int i = 4; i <= 44; i++) sr.ReadLine();
+                    if (!GetUsage(sr, response)) return null;
+                    return response;
+                }
             }
         }
 

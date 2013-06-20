@@ -53,6 +53,8 @@ namespace CubePower.Monitoring
 
         #region Override methods
 
+        private bool today = true;
+
         /* ----------------------------------------------------------------- */
         ///
         /// GetUrl
@@ -64,7 +66,12 @@ namespace CubePower.Monitoring
         /* ----------------------------------------------------------------- */
         protected override string GetUrl(DateTime time)
         {
-            return "http://www.tepco.co.jp/forecast/html/images/juyo-j.csv";
+            if (time == DateTime.Today) return "http://www.tepco.co.jp/forecast/html/images/juyo-j.csv";
+
+            today = false;
+            if (time >= new DateTime(2008, 1, 1)) return String.Format("http://www.tepco.co.jp/forecast/html/images/juyo-{0}.csv", time.Year);
+
+            return null;
         }
 
         /* ----------------------------------------------------------------- */
@@ -89,14 +96,22 @@ namespace CubePower.Monitoring
                 response.Time = time;
                 response.Usage = 0;
 
-                // 該当日の電力最大供給量(3行目)
-                for (int line = 1; line <= 2; ++line) sr.ReadLine();
-                if (!GetCapacity(sr, response)) return null;
+                if (today)
+                {
+                    // 該当日の電力最大供給量(3行目)
+                    for (int line = 1; line <= 2; ++line) sr.ReadLine();
+                    if (!GetCapacity(sr, response)) return null;
 
-                // 現在の電力消費量、取得した情報の取得時刻(45行目以降)
-                for (int line = 4; line <= 44; ++line) sr.ReadLine();
-                if (!GetUsage(sr, response)) return null;
-                return response;
+                    // 現在の電力消費量、取得した情報の取得時刻(45行目以降)
+                    for (int line = 4; line <= 44; ++line) sr.ReadLine();
+                    if (!GetUsage(sr, response)) return null;
+                    return response;
+                }
+                else
+                {
+                    for (int line = 1; line <= 3; ++line) sr.ReadLine();
+                    return CsvUnityCase(sr, response) ? response : null;
+                }
             }
         }
 

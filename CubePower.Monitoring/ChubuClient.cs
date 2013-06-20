@@ -20,6 +20,7 @@
 /* ------------------------------------------------------------------------- */
 using System;
 using System.IO;
+using System.Diagnostics;
 
 namespace CubePower.Monitoring
 {
@@ -53,6 +54,8 @@ namespace CubePower.Monitoring
 
         #region Override methods
 
+        private bool today = true;
+
         /* ----------------------------------------------------------------- */
         ///
         /// GetUrl
@@ -64,7 +67,12 @@ namespace CubePower.Monitoring
         /* ----------------------------------------------------------------- */
         protected override string GetUrl(DateTime time)
         {
-            return "http://denki-yoho.chuden.jp/denki_yoho_content_data/juyo_current_term.csv";
+            if (time == DateTime.Today) return "http://denki-yoho.chuden.jp/denki_yoho_content_data/juyo_cepco003.csv";
+
+            today = false;
+            if (time >= new DateTime(2013, 1, 1)) return "http://denki-yoho.chuden.jp/denki_yoho_content_data/juyo_current_term.csv";
+
+            return null;
         }
 
         /* ----------------------------------------------------------------- */
@@ -79,8 +87,34 @@ namespace CubePower.Monitoring
         /* ----------------------------------------------------------------- */
         protected override Response GetResponse(System.IO.Stream stream, DateTime time)
         {
-            // TODO: implementation
-            throw new NotImplementedException();
+            if (stream == null) throw new NullReferenceException();
+
+            using (var sr = new StreamReader(stream))
+            {
+                var response = new Response();
+                response.Area = this.Area;
+                response.Unit = "万kW";
+                response.Time = time;
+                response.Usage = 0;
+                response.Capacity = 0;
+
+                if (today)
+                {
+                    // 該当日の電力最大供給量(3行目)
+                    for (int line = 1; line <= 2; ++line) sr.ReadLine();
+                    if (!GetCapacity(sr, response)) return null;
+
+                    // 現在の電力消費量、取得した情報の取得時刻(77行目以降)
+                    for (int line = 4; line <= 76; ++line) sr.ReadLine();
+                    if (!GetUsage(sr, response)) return null;
+                    return response;
+                }
+                else // 当日のデータ以外は年度単位にデータがまとめられているので、別の方法で取得
+                {
+                    sr.ReadLine();
+                    return CsvUnityCase(sr, response) ? response : null;
+                }
+            }
         }
 
         #endregion

@@ -53,6 +53,10 @@
     <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CubePowerTests, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\CubePowerTests.dll</HintPath>
+    </Reference>
     <Reference Include="nunit.framework, Version=2.5.10.11092, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Program Files (x86)\NUnit 2.5.10\bin\net-2.0\framework\nunit.framework.dll</HintPath>
@@ -61,8 +65,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Monitoring\ChubuClientTester.cs" />
+    <Compile Include="Monitoring\ChugokuClientTester.cs" />
+    <Compile Include="Monitoring\HokkaidoClientTester.cs" />
+    <Compile Include="Monitoring\HokurikuClientTester.cs" />
     <Compile Include="Monitoring\KansaiClientTester.cs" />
     <Compile Include="Monitoring\KyushuClientTester.cs" />
+    <Compile Include="Monitoring\ShikokuClientTester.cs" />
+    <Compile Include="Monitoring\TohokuClientTester.cs" />
     <Compile Include="Monitoring\TokyoClientTester.cs" />
     <Compile Include="Monitoring\GetResponseHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

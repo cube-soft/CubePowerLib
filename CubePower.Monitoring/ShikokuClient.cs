@@ -53,6 +53,8 @@ namespace CubePower.Monitoring
 
         #region Override methods
 
+        private bool today = true;
+
         /* ----------------------------------------------------------------- */
         ///
         /// GetUrl
@@ -64,7 +66,12 @@ namespace CubePower.Monitoring
         /* ----------------------------------------------------------------- */
         protected override string GetUrl(DateTime time)
         {
-            return "";
+            if (time == DateTime.Today) return "http://www.yonden.co.jp/denkiyoho/juyo_yonden.csv";
+
+            today = false;
+            if (time >= new DateTime(2012, 7, 2)) return String.Format("http://www.yonden.co.jp/denkiyoho/csv/juyo_yonden_{0}.csv", time.Year);
+
+            return null;
         }
 
         /* ----------------------------------------------------------------- */
@@ -79,8 +86,33 @@ namespace CubePower.Monitoring
         /* ----------------------------------------------------------------- */
         protected override Response GetResponse(System.IO.Stream stream, DateTime time)
         {
-            // TODO: implementation
-            throw new NotImplementedException();
+            if (stream == null) throw new NullReferenceException();
+
+            using (var sr = new StreamReader(stream))
+            {
+                var response = new Response();
+                response.Area = this.Area;
+                response.Unit = "万kW";
+                response.Time = time;
+                response.Usage = 0;
+
+                if (today)
+                {
+                    // 該当日の電力最大供給量(3行目)
+                    for (int line = 1; line <= 2; ++line) sr.ReadLine();
+                    if (!GetCapacity(sr, response)) return null;
+
+                    // 現在の電力消費量、取得した情報の取得時刻(41行目以降)
+                    for (int line = 4; line <= 40; ++line) sr.ReadLine();
+                    if (!GetUsage(sr, response)) return null;
+                    return response;
+                }
+                else
+                {
+                    for (int line = 1; line <= 3; ++line) sr.ReadLine();
+                    return CsvUnityCase(sr, response) ? response : null;
+                }
+            }
         }
 
         #endregion
