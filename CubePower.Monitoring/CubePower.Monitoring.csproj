@@ -59,11 +59,16 @@
   <ItemGroup>
     <Compile Include="Area.cs" />
     <Compile Include="ChubuClient.cs" />
+    <Compile Include="ChugokuClient.cs" />
     <Compile Include="Client.cs" />
+    <Compile Include="HokkaidoClient.cs" />
+    <Compile Include="HokurikuClient.cs" />
     <Compile Include="KansaiClient.cs" />
     <Compile Include="KyushuClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Response.cs" />
+    <Compile Include="ShikokuClient.cs" />
+    <Compile Include="TohokuClient.cs" />
     <Compile Include="TokyoClient.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

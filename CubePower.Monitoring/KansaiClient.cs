@@ -79,8 +79,6 @@ namespace CubePower.Monitoring
         /* ----------------------------------------------------------------- */
         protected override Response GetResponse(System.IO.Stream stream, DateTime time)
         {
-            // TODO: implementation
-            //throw new NotImplementedException();
             if (stream == null)
             {
                 throw new NullReferenceException();
