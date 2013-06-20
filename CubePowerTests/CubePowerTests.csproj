@@ -60,6 +60,7 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Monitoring\ChubuClientTester.cs" />
     <Compile Include="Monitoring\KansaiClientTester.cs" />
     <Compile Include="Monitoring\KyushuClientTester.cs" />
     <Compile Include="Monitoring\TokyoClientTester.cs" />

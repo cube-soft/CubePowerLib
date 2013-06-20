@@ -19,6 +19,7 @@
 ///
 /* ------------------------------------------------------------------------- */
 using System;
+using System.Diagnostics;
 
 namespace CubePower.Monitoring
 {
@@ -130,6 +131,77 @@ namespace CubePower.Monitoring
         protected virtual Response GetResponse(System.IO.Stream stream, DateTime time)
         {
             throw new NotImplementedException();
+        }
+
+        #endregion
+
+        #region Other virtual methods
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// GetCapacity
+        /// 
+        /// <summary>
+        /// ストリームからピーク時供給力を取得します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        protected virtual bool GetCapacity(System.IO.StreamReader reader, Response dest)
+        {
+            try
+            {
+                var fields = reader.ReadLine().Split(',');
+                dest.Capacity = int.Parse(fields[0]);
+                return true;
+            }
+            catch (Exception err)
+            {
+                Trace.TraceError(err.ToString());
+                return false;
+            }
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// GetCapacity
+        /// 
+        /// <summary>
+        /// ストリームから要求された時刻の消費電力量を取得します。
+        /// Response.Time プロパティは、消費電力量を取得できた時刻で上書き
+        /// されます。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        protected virtual bool GetUsage(System.IO.StreamReader reader, Response dest)
+        {
+            var target = dest.Time;
+            var found = false;
+
+            for (var line = reader.ReadLine(); !string.IsNullOrEmpty(line); line = reader.ReadLine())
+            {
+                var fields = line.Split(','); // DATE,TIME,USAGE
+                if (fields.Length != 3) continue;
+                try
+                {
+                    var time = DateTime.ParseExact(fields[0] + ',' + fields[1],
+                        "yyyy'/'M'/'d','H':'mm",
+                        System.Globalization.DateTimeFormatInfo.InvariantInfo);
+                    if (time <= target)
+                    {
+                        dest.Time = time;
+                        dest.Usage = int.Parse(fields[2]);
+                        found = true;
+                    }
+                }
+                catch (FormatException /* err */) { /* フォーマットの不一致は無視 */ }
+                catch (Exception err)
+                {
+                    Trace.TraceError(err.ToString());
+                    return false;
+                }
+            }
+
+            return found;
         }
 
         #endregion

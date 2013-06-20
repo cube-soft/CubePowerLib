@@ -58,6 +58,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Area.cs" />
+    <Compile Include="ChubuClient.cs" />
     <Compile Include="Client.cs" />
     <Compile Include="KansaiClient.cs" />
     <Compile Include="KyushuClient.cs" />

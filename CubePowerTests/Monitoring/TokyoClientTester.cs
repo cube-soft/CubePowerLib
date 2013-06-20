@@ -57,6 +57,7 @@ namespace CubePowerTests.Monitoring
                 var filename = "tokyo.csv";
                 var time = new DateTime(2013, 6, 4, 00, 00, 00);
                 var response = GetResponseHelper.Run(client, filename, time);
+                Assert.NotNull(response);
                 Assert.AreEqual(2013, response.Time.Year);
                 Assert.AreEqual(6, response.Time.Month);
                 Assert.AreEqual(4, response.Time.Day);
@@ -70,6 +71,7 @@ namespace CubePowerTests.Monitoring
 
                 time = new DateTime(2013, 6, 4, 12, 08, 00);
                 response = GetResponseHelper.Run(client, filename, time);
+                Assert.NotNull(response);
                 Assert.AreEqual(2013, response.Time.Year);
                 Assert.AreEqual(6, response.Time.Month);
                 Assert.AreEqual(4, response.Time.Day);
