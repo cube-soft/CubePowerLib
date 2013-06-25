@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <VisualState xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ShowCheckBoxes="false">
-  <TopNode>[0-1028]C:\cygwin\home\ichikawa\CubePowerLib\CubePowerTests\CubePowerTests.dll</TopNode>
-  <SelectedNode>[0-1004]CubePowerTests.Monitoring.KyushuClientTester</SelectedNode>
+  <TopNode>[0-1000]C:\cygwin\home\ichikawa\CubePowerLib\CubePowerTests\CubePowerTests.nunit</TopNode>
+  <SelectedNode>[0-1019]CubePowerTests.Monitoring.KyushuClientTester</SelectedNode>
   <ExcludeCategories>false</ExcludeCategories>
   <Nodes>
     <Node UniqueName="[0-1000]C:\cygwin\home\ichikawa\CubePowerLib\CubePowerTests\CubePowerTests.nunit" Expanded="true" />
     <Node UniqueName="[0-1028]C:\cygwin\home\ichikawa\CubePowerLib\CubePowerTests\CubePowerTests.dll" Expanded="true" />
     <Node UniqueName="[0-1029]CubePowerTests" Expanded="true" />
     <Node UniqueName="[0-1030]CubePowerTests.Monitoring" Expanded="true" />
-    <Node UniqueName="[0-1010]CubePowerTests.Monitoring.ChubuClientTester" Expanded="true" />
+    <Node UniqueName="[0-1025]CubePowerTests.Monitoring.ChubuClientTester" Expanded="true" />
     <Node UniqueName="[0-1013]CubePowerTests.Monitoring.ChugokuClientTester" Expanded="true" />
-    <Node UniqueName="[0-1016]CubePowerTests.Monitoring.HokkaidoClientTester" Expanded="true" />
-    <Node UniqueName="[0-1019]CubePowerTests.Monitoring.HokurikuClientTester" Expanded="true" />
-    <Node UniqueName="[0-1007]CubePowerTests.Monitoring.KansaiClientTester" Expanded="true" />
-    <Node UniqueName="[0-1004]CubePowerTests.Monitoring.KyushuClientTester" Expanded="true" />
-    <Node UniqueName="[0-1022]CubePowerTests.Monitoring.ShikokuClientTester" Expanded="true" />
-    <Node UniqueName="[0-1025]CubePowerTests.Monitoring.TohokuClientTester" Expanded="true" />
-    <Node UniqueName="[0-1001]CubePowerTests.Monitoring.TokyoClientTester" Expanded="true" />
+    <Node UniqueName="[0-1010]CubePowerTests.Monitoring.HokkaidoClientTester" Expanded="true" />
+    <Node UniqueName="[0-1007]CubePowerTests.Monitoring.HokurikuClientTester" Expanded="true" />
+    <Node UniqueName="[0-1022]CubePowerTests.Monitoring.KansaiClientTester" Expanded="true" />
+    <Node UniqueName="[0-1019]CubePowerTests.Monitoring.KyushuClientTester" Expanded="true" />
+    <Node UniqueName="[0-1001]CubePowerTests.Monitoring.ShikokuClientTester" Expanded="true" />
+    <Node UniqueName="[0-1016]CubePowerTests.Monitoring.TohokuClientTester" Expanded="true" />
+    <Node UniqueName="[0-1004]CubePowerTests.Monitoring.TokyoClientTester" Expanded="true" />
   </Nodes>
 </VisualState>

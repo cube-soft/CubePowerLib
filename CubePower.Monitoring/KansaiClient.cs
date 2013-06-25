@@ -53,7 +53,7 @@ namespace CubePower.Monitoring
 
         #region Override methods
 
-        private bool today = true;
+        //private bool today = true;
 
         /* ----------------------------------------------------------------- */
         ///
@@ -68,7 +68,7 @@ namespace CubePower.Monitoring
         {
             if (time == DateTime.Today) return "http://www.kepco.co.jp/yamasou/juyo1_kansai.csv";
 
-            today = false;
+            //today = false;
             // 当日以外のデータの収集方法が未定。関電はZIP形式でcsvを保管しているため。
             //if (time >= new DateTime(2013, 3, 30)) return String.Format("http://www.tepco.co.jp/forecast/html/images/juyo-{0}.csv", time.Year);
             //else if (time >= new DateTime(2012, 12, 1)) return String.Format("http://www.tepco.co.jp/forecast/html/images/juyo-{0}.csv", time.Year);
