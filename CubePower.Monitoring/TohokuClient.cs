@@ -66,7 +66,7 @@ namespace CubePower.Monitoring
         /* ----------------------------------------------------------------- */
         protected override string GetUrl(DateTime time)
         {
-            if (time == DateTime.Today) return "http://setsuden.tohoku-epco.co.jp/common/demand/juyo_tohoku.csv";
+            if (time >= DateTime.Today) return "http://setsuden.tohoku-epco.co.jp/common/demand/juyo_tohoku.csv";
 
             today = false;
             if (time >= new DateTime(2008,4,1)) return String.Format("http://setsuden.tohoku-epco.co.jp/common/demand/juyo_{0}_tohoku.csv", time.Year);

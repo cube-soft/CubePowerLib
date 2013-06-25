@@ -105,29 +105,13 @@ namespace CubePowerTests.Monitoring
                 var client = new CubePower.Monitoring.KyushuClient();
                 Assert.AreEqual(CubePower.Monitoring.Area.Kyushu, client.Area);
 
-                try
-                {
-                    var response = client.GetResponse(DateTime.Today);
-                    Assert.NotNull(response);
+                var response = client.GetResponse(DateTime.Now);
+                Assert.NotNull(response);
 
-                    response = client.GetResponse(DateTime.Today.AddDays(-1));
-                    Assert.NotNull(response);
-                }
-                catch (System.Net.WebException e)
-                {
-                    System.Net.WebExceptionStatus status = e.Status;
-                    if (status == System.Net.WebExceptionStatus.ProtocolError)
-                    {
-                        string err;
-                        err = "The server returned protocol error ";
-                        System.Net.HttpWebResponse httpResponse = (System.Net.HttpWebResponse)e.Response;
-                        err += (int)httpResponse.StatusCode + " - " + httpResponse.StatusCode;
-                        Assert.Fail(err);
-                    }
-                    Assert.Fail("Fail : " + e.Status.ToString() + " : " + e.Message);
-                }
+                response = client.GetResponse(DateTime.Now.AddDays(-1));
+                Assert.NotNull(response);
             }
-            catch (Exception err) { Assert.Fail(err.Message); }
+            catch (Exception err) { Assert.Fail(err.ToString()); }
         }
     }
 }

@@ -67,7 +67,7 @@ namespace CubePower.Monitoring
         /* ----------------------------------------------------------------- */
         protected override string GetUrl(DateTime time)
         {
-            if (time == DateTime.Today) return "http://denki-yoho.chuden.jp/denki_yoho_content_data/juyo_cepco003.csv";
+            if (time >= DateTime.Today) return "http://denki-yoho.chuden.jp/denki_yoho_content_data/juyo_cepco003.csv";
 
             today = false;
             if (time >= new DateTime(2013, 1, 1)) return "http://denki-yoho.chuden.jp/denki_yoho_content_data/juyo_current_term.csv";

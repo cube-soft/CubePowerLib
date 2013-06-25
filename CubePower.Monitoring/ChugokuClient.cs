@@ -66,7 +66,7 @@ namespace CubePower.Monitoring
         /* ----------------------------------------------------------------- */
         protected override string GetUrl(DateTime time)
         {
-            if (time == DateTime.Today) return "http://www.energia.co.jp/jukyuu/sys/juyo-j.csv";
+            if (time >= DateTime.Today) return "http://www.energia.co.jp/jukyuu/sys/juyo-j.csv";
 
             today = false;
             if (time >= new DateTime(2012, 4, 2)) return String.Format("http://www.energia.co.jp/jukyuu/sys/juyo-{0}.csv", time.Year);

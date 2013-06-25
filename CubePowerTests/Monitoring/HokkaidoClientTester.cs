@@ -107,7 +107,7 @@ namespace CubePowerTests.Monitoring
                 var client = new CubePower.Monitoring.HokkaidoClient();
                 Assert.AreEqual(CubePower.Monitoring.Area.Hokkaido, client.Area);
 
-                var response = client.GetResponse(DateTime.Today);
+                var response = client.GetResponse(DateTime.Now);
                 Assert.NotNull(response);
             }
             catch (Exception err) { Assert.Fail(err.ToString()); }

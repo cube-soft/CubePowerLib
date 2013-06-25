@@ -66,7 +66,7 @@ namespace CubePower.Monitoring
         /* ----------------------------------------------------------------- */
         protected override string GetUrl(DateTime time)
         {
-            if (time == DateTime.Today) return "http://denkiyoho.hepco.co.jp/data/juyo_hokkaidou.csv";
+            if (time >= DateTime.Today) return "http://denkiyoho.hepco.co.jp/data/juyo_hokkaidou.csv";
 
             today = false;
             if (time >= new DateTime(2010, 1, 1)) return String.Format("http://denkiyoho.hepco.co.jp/data/{0}_juyo_hokkaidou.csv", time.Year);

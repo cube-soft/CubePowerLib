@@ -66,7 +66,7 @@ namespace CubePower.Monitoring
         /* ----------------------------------------------------------------- */
         protected override string GetUrl(DateTime time)
         {
-            if (time == DateTime.Today) return String.Format("http://www.kyuden.co.jp/power_usages/csv/electric_power_usage{0}.csv", time.ToString("yyyyMMdd"));
+            if (time >= DateTime.Today) return String.Format("http://www.kyuden.co.jp/power_usages/csv/electric_power_usage{0}.csv", time.ToString("yyyyMMdd"));
 
             today = false;
             if (time >= new DateTime(2012, 6, 29)) return String.Format("http://www.kyuden.co.jp/power_usages/csv/juyo-hourly-{0}.csv", time.ToString("yyyyMMdd"));

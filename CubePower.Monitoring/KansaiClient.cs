@@ -66,7 +66,7 @@ namespace CubePower.Monitoring
         /* ----------------------------------------------------------------- */
         protected override string GetUrl(DateTime time)
         {
-            if (time == DateTime.Today) return "http://www.kepco.co.jp/yamasou/juyo1_kansai.csv";
+            if (time >= DateTime.Today) return "http://www.kepco.co.jp/yamasou/juyo1_kansai.csv";
 
             //today = false;
             // 当日以外のデータの収集方法が未定。関電はZIP形式でcsvを保管しているため。
