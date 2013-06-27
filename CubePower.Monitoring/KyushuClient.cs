@@ -102,7 +102,7 @@ namespace CubePower.Monitoring
 
                 // 現在の電力消費量、取得した情報の取得時刻
                 var skipline = _today ? 8 : 44;
-                for (int i = 4; i <= skipline; i++) sr.ReadLine();
+                for (int line = 4; line <= skipline; ++line) sr.ReadLine();
                 return GetUsage(sr, response) ? response : null;
             }
         }

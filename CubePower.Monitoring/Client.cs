@@ -187,8 +187,11 @@ namespace CubePower.Monitoring
                         "yyyy'/'M'/'d','H':'mm",
                         System.Globalization.DateTimeFormatInfo.InvariantInfo);
                     if (time > target) break;
+                    var usage = (int)double.Parse(fields[2]);
+                    if (usage <= 0) continue;
+
                     dest.Time = time;
-                    dest.Usage = (int)double.Parse(fields[2]);
+                    dest.Usage = usage;
                     found = true;
                 }
                 catch (FormatException /* err */) { /* フォーマットの不一致は無視 */ }
