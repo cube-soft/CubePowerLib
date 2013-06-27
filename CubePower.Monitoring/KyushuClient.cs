@@ -53,8 +53,6 @@ namespace CubePower.Monitoring
 
         #region Override methods
 
-        private bool today = true;
-
         /* ----------------------------------------------------------------- */
         ///
         /// GetUrl
@@ -66,10 +64,12 @@ namespace CubePower.Monitoring
         /* ----------------------------------------------------------------- */
         protected override string GetUrl(DateTime time)
         {
-            if (time >= DateTime.Today) return String.Format("http://www.kyuden.co.jp/power_usages/csv/electric_power_usage{0}.csv", time.ToString("yyyyMMdd"));
+            var format = "http://www.kyuden.co.jp/power_usages/csv/electric_power_usage{0}.csv";
+            if (time >= DateTime.Today) return String.Format(format, time.ToString("yyyyMMdd"));
 
-            today = false;
-            if (time >= new DateTime(2012, 6, 29)) return String.Format("http://www.kyuden.co.jp/power_usages/csv/juyo-hourly-{0}.csv", time.ToString("yyyyMMdd"));
+            _today = false;
+            format = "http://www.kyuden.co.jp/power_usages/csv/juyo-hourly-{0}.csv";
+            if (time >= new DateTime(2012, 6, 29)) return String.Format(format, time.ToString("yyyyMMdd"));
 
             return null;
        }
@@ -101,23 +101,16 @@ namespace CubePower.Monitoring
                 if (!GetCapacity(sr, response)) return null;
 
                 // 現在の電力消費量、取得した情報の取得時刻
-                if (today)
-                {
-                    // (9行目以降)
-                    for (int i = 4; i <= 8; i++) sr.ReadLine();
-                    if (!GetUsage(sr, response)) return null;
-                    return response;
-                }
-                else
-                {
-                    // (45行目以降)
-                    for (int i = 4; i <= 44; i++) sr.ReadLine();
-                    if (!GetUsage(sr, response)) return null;
-                    return response;
-                }
+                var skipline = _today ? 8 : 44;
+                for (int i = 4; i <= skipline; i++) sr.ReadLine();
+                return GetUsage(sr, response) ? response : null;
             }
         }
 
+        #endregion
+
+        #region Variables
+        private bool _today = true;
         #endregion
     }
 }

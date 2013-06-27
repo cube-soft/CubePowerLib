@@ -53,8 +53,6 @@ namespace CubePower.Monitoring
 
         #region Override methods
 
-        //private bool today = true;
-
         /* ----------------------------------------------------------------- */
         ///
         /// GetUrl
@@ -62,22 +60,16 @@ namespace CubePower.Monitoring
         /// <summary>
         /// 電力情報を取得するための URL を取得します。
         /// </summary>
+        /// 
+        /// <remarks>
+        /// 関西電力では、当日以外の情報は zip 形式で圧縮して公開されている
+        /// ため、現時点では当日の情報のみ取得する事ができます。
+        /// </remarks>
         ///
         /* ----------------------------------------------------------------- */
         protected override string GetUrl(DateTime time)
         {
-            if (time >= DateTime.Today) return "http://www.kepco.co.jp/yamasou/juyo1_kansai.csv";
-
-            //today = false;
-            // 当日以外のデータの収集方法が未定。関電はZIP形式でcsvを保管しているため。
-            //if (time >= new DateTime(2013, 3, 30)) return String.Format("http://www.tepco.co.jp/forecast/html/images/juyo-{0}.csv", time.Year);
-            //else if (time >= new DateTime(2012, 12, 1)) return String.Format("http://www.tepco.co.jp/forecast/html/images/juyo-{0}.csv", time.Year);
-            //else if (time >= new DateTime(2012, 9,  8)) return String.Format("http://www.tepco.co.jp/forecast/html/images/juyo-{0}.csv", time.Year);
-            //else if (time >= new DateTime(2012, 6, 30)) return String.Format("http://www.tepco.co.jp/forecast/html/images/juyo-{0}.csv", time.Year);
-            //else if (time >= new DateTime(2012, 3, 31)) return String.Format("http://www.tepco.co.jp/forecast/html/images/juyo-{0}.csv", time.Year);
-            //else if (time >= new DateTime(2011, 12, 1)) return String.Format("http://www.tepco.co.jp/forecast/html/images/juyo-{0}.csv", time.Year);
-            //else if (new DateTime(2011, 9, 21) <= time && time >= new DateTime(2011, 6, 30)) return String.Format("http://www.tepco.co.jp/forecast/html/images/juyo-{0}.csv", time.Year);
-            return null;
+            return (time >= DateTime.Today) ? "http://www.kepco.co.jp/yamasou/juyo1_kansai.csv" : null;
         }
 
         /* ----------------------------------------------------------------- */
@@ -108,9 +100,7 @@ namespace CubePower.Monitoring
 
                 // 現在の電力消費量、取得した情報の取得時刻(50行目以降)
                 for (int i = 4; i <= 49; i++) sr.ReadLine();
-                if (!GetUsage(sr, response)) return null;
-                
-                return response;
+                return GetUsage(sr, response) ? response : null;
             }
         }
 

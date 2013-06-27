@@ -54,8 +54,6 @@ namespace CubePower.Monitoring
 
         #region Override methods
 
-        private bool today = true;
-
         /* ----------------------------------------------------------------- */
         ///
         /// GetUrl
@@ -69,7 +67,7 @@ namespace CubePower.Monitoring
         {
             if (time >= DateTime.Today) return "http://denki-yoho.chuden.jp/denki_yoho_content_data/juyo_cepco003.csv";
 
-            today = false;
+            _today = false;
             if (time >= new DateTime(2013, 1, 1)) return "http://denki-yoho.chuden.jp/denki_yoho_content_data/juyo_current_term.csv";
 
             return null;
@@ -98,7 +96,7 @@ namespace CubePower.Monitoring
                 response.Usage = 0;
                 response.Capacity = 0;
 
-                if (today)
+                if (_today)
                 {
                     // 該当日の電力最大供給量(3行目)
                     for (int line = 1; line <= 2; ++line) sr.ReadLine();
@@ -106,10 +104,9 @@ namespace CubePower.Monitoring
 
                     // 現在の電力消費量、取得した情報の取得時刻(77行目以降)
                     for (int line = 4; line <= 76; ++line) sr.ReadLine();
-                    if (!GetUsage(sr, response)) return null;
-                    return response;
+                    return GetUsage(sr, response) ? response : null;
                 }
-                else // 当日のデータ以外は年度単位にデータがまとめられているので、別の方法で取得
+                else
                 {
                     sr.ReadLine();
                     return CsvUnityCase(sr, response) ? response : null;
@@ -117,6 +114,10 @@ namespace CubePower.Monitoring
             }
         }
 
+        #endregion
+
+        #region Variables
+        private bool _today = true;
         #endregion
     }
 }

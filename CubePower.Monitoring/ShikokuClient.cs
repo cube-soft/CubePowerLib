@@ -53,8 +53,6 @@ namespace CubePower.Monitoring
 
         #region Override methods
 
-        private bool today = true;
-
         /* ----------------------------------------------------------------- */
         ///
         /// GetUrl
@@ -68,8 +66,9 @@ namespace CubePower.Monitoring
         {
             if (time >= DateTime.Today) return "http://www.yonden.co.jp/denkiyoho/juyo_yonden.csv";
 
-            today = false;
-            if (time >= new DateTime(2012, 7, 2)) return String.Format("http://www.yonden.co.jp/denkiyoho/csv/juyo_yonden_{0}.csv", time.Year);
+            _today = false;
+            var format = "http://www.yonden.co.jp/denkiyoho/csv/juyo_yonden_{0}.csv";
+            if (time >= new DateTime(2012, 7, 2)) return String.Format(format, time.Year);
 
             return null;
         }
@@ -96,7 +95,7 @@ namespace CubePower.Monitoring
                 response.Time = time;
                 response.Usage = 0;
 
-                if (today)
+                if (_today)
                 {
                     // 該当日の電力最大供給量(3行目)
                     for (int line = 1; line <= 2; ++line) sr.ReadLine();
@@ -104,8 +103,7 @@ namespace CubePower.Monitoring
 
                     // 現在の電力消費量、取得した情報の取得時刻(41行目以降)
                     for (int line = 4; line <= 40; ++line) sr.ReadLine();
-                    if (!GetUsage(sr, response)) return null;
-                    return response;
+                    return GetUsage(sr, response) ? response : null;
                 }
                 else
                 {
@@ -115,6 +113,10 @@ namespace CubePower.Monitoring
             }
         }
 
+        #endregion
+
+        #region Variables
+        private bool _today = true;
         #endregion
     }
 }
