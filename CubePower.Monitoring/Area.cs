@@ -33,14 +33,14 @@ namespace CubePower.Monitoring
     /* --------------------------------------------------------------------- */
     public enum Area
     {
-        Tokyo,      // 東京電力
-        Tohoku,     // 関西電力
-        Kansai,     // 中部電力
-        Kyushu,     // 九州電力
-        Chubu,      // 中部電力
-        Hokuriku,   // 北陸電力
-        Shikoku,    // 四国電力
-        Chugoku,    // 中国電力
         Hokkaido,   // 北海道電力
+        Tohoku,     // 東北電力
+        Hokuriku,   // 北陸電力
+        Tokyo,      // 東京電力
+        Chubu,      // 中部電力
+        Kansai,     // 関西電力
+        Chugoku,    // 中国電力
+        Shikoku,    // 四国電力
+        Kyushu,     // 九州電力
     }
 }
